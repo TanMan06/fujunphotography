@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import PhotoGallery from './PhotoGallery';
 import Footer from './Footer';
 import photo from "../photos/20230705113344_IMG_5220.jpg";
-
+import { Link } from "react-router-dom";
 const Home = () => {
   return (
     <div>
@@ -22,9 +22,9 @@ const Home = () => {
         >
           <h1 className="text-5xl font-heading font-bold mb-4">Welcome to Fujun Photography</h1>
           <p className="font-body text-xl mb-8">Capturing moments, one shot at a time.</p>
-          <a href="#portfolio" className="bg-secondary text-white py-2 px-4 rounded hover:bg-accent transition-colors duration-300">
+          <Link to ="/contact" className="bg-secondary text-white py-2 px-4 rounded hover:bg-accent transition-colors duration-300">
             View Portfolio
-          </a>
+          </Link>
         </motion.div>
       </section>
 

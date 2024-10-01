@@ -1,34 +1,80 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
 
-const Contact = () => {
-  return (
-    <section id="contact" className="py-16 bg-gray-100 text-gray-800">
-      <motion.div 
-        initial={{ y: '100vh' }} 
-        animate={{ y: 0 }} 
-        transition={{ type: 'spring', stiffness: 120 }}
-        className="container mx-auto"
-      >
-        <h2 className="text-4xl font-bold mb-4">Contact Me</h2>
-        <form className="space-y-4">
-          <div>
-            <label className="block text-lg mb-2" htmlFor="name">Name</label>
-            <input className="w-full p-2 border border-gray-300 rounded" type="text" id="name" name="name"/>
-          </div>
-          <div>
-            <label className="block text-lg mb-2" htmlFor="email">Email</label>
-            <input className="w-full p-2 border border-gray-300 rounded" type="email" id="email" name="email"/>
-          </div>
-          <div>
-            <label className="block text-lg mb-2" htmlFor="message">Message</label>
-            <textarea className="w-full p-2 border border-gray-300 rounded" id="message" name="message"></textarea>
-          </div>
-          <button className="bg-gray-800 text-white p-2 rounded" type="submit">Send</button>
-        </form>
-      </motion.div>
-    </section>
-  );
+const ContactForm: React.FC = () => {
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [message, setMessage] = useState('');
+    const [responseMessage, setResponseMessage] = useState('');
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const formData = { name, email, message };
+
+        try {
+            const response = await fetch('3.18.221.147/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+
+            if (response) {
+                const data = await response.json();
+                setResponseMessage(data.message);
+                setName('');
+                setEmail('');
+                setMessage('');
+            } else {
+                setResponseMessage('Failed to send message. Please try again later.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            setResponseMessage('An error occurred. Please try again later.');
+        }
+    };
+
+    return (
+        <div className="max-w-md mx-auto mt-8 p-4 border rounded shadow">
+            <h2 className="text-lg font-semibold mb-4">Contact Us</h2>
+            <form onSubmit={handleSubmit}>
+                <div className="mb-4">
+                    <label className="block mb-1">Name:</label>
+                    <input
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className="border rounded w-full p-2"
+                        required
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block mb-1">Email:</label>
+                    <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="border rounded w-full p-2"
+                        required
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block mb-1">Message:</label>
+                    <textarea
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                        className="border rounded w-full p-2"
+                        required
+                    />
+                </div>
+                <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+                    Send Message
+                </button>
+            </form>
+            {responseMessage && <p className="mt-4">{responseMessage}</p>}
+        </div>
+    );
 };
 
-export default Contact;
+export default ContactForm;

@@ -1,14 +1,15 @@
-import React from 'react';
-import Header from './components/Header';
-import Home from './components/Home';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import HomePage from './components/Home';
+import ContactForm from './components/Contact';
 
 function App() {
   return (
-    <div className="App">
-      <Header />
-      <Home />
-      {/* Other components and content will go here */}
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/contact" element={<ContactForm />} />
+      </Routes>
+    </Router>
   );
 }
 
