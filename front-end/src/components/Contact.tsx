@@ -12,7 +12,7 @@ const ContactForm: React.FC = () => {
         const formData = { name, email, message };
 
         try {
-            const response = await fetch('3.18.221.147/submit', {
+            const response = await fetch('http://localhost:3000/submit-form', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -26,6 +26,7 @@ const ContactForm: React.FC = () => {
                 setName('');
                 setEmail('');
                 setMessage('');
+                
             } else {
                 setResponseMessage('Failed to send message. Please try again later.');
             }

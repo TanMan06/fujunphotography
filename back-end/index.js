@@ -1,21 +1,24 @@
 const express = require('express');
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
-
+const cors = require('cors');
 const app = express();
+const nodemailer = require('nodemailer');
+
+
+app.use(cors());
 app.use(bodyParser.json());
 
-// Database connection
 const connection = mysql.createConnection({
-    host: '3.18.221.147', // Use 'localhost' if on the same EC2 instance
-    user: 'TanMan06',
-    password: 'William!234',
+    host: 'DATABSE IP', 
+    user: 'USER',
+    password: 'PASSWORD',
     database: 'ContactFormDB'
 });
 
 connection.connect((err) => {
     if (err) throw err;
-    console.log('Connected to the database.');
+    console.log('Connected to the database.', err);
 });
 
 app.post('/submit-form', (req, res) => {
@@ -29,9 +32,35 @@ app.post('/submit-form', (req, res) => {
             res.status(200).send({ message: 'Data stored successfully' });
         }
     });
+    const newData = { Name: name, Email: email, Message: message };
+    sendEmail(newData);
+    
 });
 
-// Start the server
 app.listen(3000, () => {
     console.log('Server is running on port 3000');
 });
+
+let transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'YOURGMAIL',
+        pass: 'YOURPASSWORD' 
+    }
+});
+
+function sendEmail(newData) {
+    let mailOptions = {
+        from: '"Your App" <YOURGMAIL>',
+        to: 'EMAIL TO XYZ',
+        subject: 'New Contact',
+        text: `Submission: ${JSON.stringify(newData)}`
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            return console.error('Error sending email:', error);
+        }
+        console.log('Email sent: %s', info.messageId);
+    });
+}
